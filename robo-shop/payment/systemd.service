@@ -1,0 +1,16 @@
+[Unit]
+Description=Python Payment Service
+
+[Service]
+Environment="AMQP_HOST=RABBITMQHOST"
+Environment="CART_HOST=CARTHOST"
+Environment="USER_HOST=USERHOST"
+WorkingDirectory=/root/ROBO-SHOP/payment
+ExecStart=/usr/local/bin/uwsgi --ini payment.ini
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/robo-shop/payment.log
+StandardError=append:/var/log/robo-shop/payment.log
+SyslogIdentifier=payment
+[Install]
+WantedBy=multi-user.target

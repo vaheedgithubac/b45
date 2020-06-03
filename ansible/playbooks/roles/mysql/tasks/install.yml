@@ -1,0 +1,30 @@
+- name: Setup MySQL Download Directory 
+  file:
+    path: /tmp/mysql 
+    state: directory 
+
+- name: Download MySQL 
+  unarchive:
+    src: https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
+    dest: /tmp/mysql
+    remote_src: yes
+
+- name: Install MySQL 
+  package:
+    name: /tmp/mysql/{{item}}
+    state: present 
+  loop:
+    - mysql-community-common-5.7.28-1.el7.x86_64.rpm
+    - mysql-community-libs-5.7.28-1.el7.x86_64.rpm
+    - mysql-community-client-5.7.28-1.el7.x86_64.rpm 
+    - mysql-community-server-5.7.28-1.el7.x86_64.rpm
+
+- name: Remove MySQL Download Directory 
+  file:
+    path: /tmp/mysql 
+    state: absent  
+
+- name: Start MySQL Service 
+  service:
+    name: mysqld
+    state: started 

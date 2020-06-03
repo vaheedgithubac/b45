@@ -1,0 +1,21 @@
+- name: Check Go installed 
+  stat:
+    path: /opt/go/bin/go 
+  register: out 
+  
+- name: Download GO 
+  unarchive:
+    src: https://dl.google.com/go/go{{GO_VERSION}}.linux-amd64.tar.gz
+    dest: /opt 
+    remote_src: yes 
+  when: out.stat.exists == "false" or not out.stat.exists
+
+- name: Create Go links 
+  file:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    state: link
+  loop:
+    - { "src": "/opt/go/bin/go", "dest" : "/bin/go" }
+    - { "src": "/opt/go/bin/gofmt", "dest" : "/bin/gofmt" }
+  when: out.stat.exists == "false" or not out.stat.exists

@@ -1,0 +1,57 @@
+- name: Install JQ 
+  package:
+    name: jq 
+    state: installed 
+
+- name: Upload license key 
+  lineinfile:
+    path: /etc/newrelic-infra.yml
+    line: "license_key: {{LICENSE_KEY}}"
+    create: yes 
+
+- name: Download centos repo 
+  get_url:
+    url: https://download.newrelic.com/infrastructure_agent/linux/yum/el/7/x86_64/newrelic-infra.repo
+    dest: /etc/yum.repos.d/newrelic-infra.repo
+
+- name: Install new-relic agent 
+  yum:
+    name: newrelic-infra
+    state: present 
+
+- name: Copy templates 
+  template:
+    src: "{{item}}.j2"
+    dest: "/tmp/{{item}}"
+  loop:
+    - host-not-report.json 
+    - cart-svc-proc-check.json 
+
+  #async: 60
+  #poll: 5
+
+- name: Copy Delete Script 
+  copy:
+    src: delete-alert.sh 
+    dest: /tmp/delete-alert.sh 
+    mode: 0755
+
+- name: Delete old alerts 
+  shell: /tmp/delete-alert.sh {{API_KEY}}
+
+- name: Copy alert make script 
+  copy:
+    src: make-alert.sh 
+    dest: /tmp/make-alert.sh 
+    mode: 0755
+
+- name: Create Alert for Host Not Reporting 
+  shell: /tmp/make-alert.sh {{API_KEY}} host-not-report.json
+
+- name: Print APP_NAME 
+  debug:
+    msg: "{{SERVICE_NAME}}"
+
+- name: Create Alert for Cart Service
+  shell: /tmp/make-alert.sh {{API_KEY}} cart-svc-proc-check.json
+  when: SERVICE_NAME == "cart" 

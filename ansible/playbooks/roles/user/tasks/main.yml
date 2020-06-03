@@ -1,0 +1,40 @@
+- name: CLone the repo 
+  import_role:
+    name: app-clone
+  vars:
+    ACTION: clone 
+
+- name: Import App Setup Role
+  import_role:
+    name: nodejs
+    tasks_from: app-setup
+  vars:
+    APP_NAME: user 
+
+- name: Update MongoDB URL 
+  replace:
+    path: /etc/systemd/system/user.service
+    regexp: 'MONGOHOST'
+    replace: "{{MONGODB_NAME}}" 
+
+- name: Update Redis URL 
+  replace:
+    path: /etc/systemd/system/user.service
+    regexp: 'REDISHOST'
+    replace: "{{REDIS_NAME}}" 
+
+- name: SystemD Dameon-Reload 
+  systemd:
+    daemon_reload: yes
+
+- name: Start service 
+  systemd:
+    name: "{{APP_NAME}}"
+    state: restarted 
+    enabled: yes 
+
+- name: Install Filebeat 
+  import_role:
+    name: filebeat
+  vars:
+    FILEBEAT_CONFIG: filebeat.yml

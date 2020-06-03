@@ -1,0 +1,65 @@
+- name: Install Python3 
+  package:
+    name: "{{item}}"
+    state: present
+  loop:
+    - python36
+    - gcc
+    - python3-devel
+
+- name: Copy Payments Application 
+  copy:
+    src: /tmp/robo-shop/{{APP_NAME}}
+    dest: "{{APP_ROOT_DIR}}"
+    remote_src: yes 
+
+- name: Install Pip Requirements 
+  pip:
+    requirements: "{{APP_DIR}}/requirements.txt"
+    executable: pip-3.6
+
+- name: Copy SystemD Service file 
+  copy:
+    src: "/tmp/robo-shop/{{APP_NAME}}/systemd.service"
+    dest: "/etc/systemd/system/{{APP_NAME}}.service"
+    remote_src: yes 
+
+- name: Configure Systemd Service for {{APP_NAME}} Application 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "ROOT-DIR"
+    replace: "{{APP_ROOT_DIR}}"
+
+- name: Update RabbitMQ Endpoint 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "RABBITMQHOST"
+    replace: "{{RABBITMQ_HOST}}"
+
+- name: Update User Endpoint 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "USERHOST"
+    replace: "{{USER_HOST}}"
+
+- name: Update RabbitMQ Endpoint 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "CARTHOST"
+    replace: "{{CART_HOST}}"
+
+- name: SystemD Daemon-Reload 
+  systemd:
+    daemon_reload: yes
+
+- name: Start Payment Service 
+  service:
+    name: payment 
+    state: started 
+    enabled: yes 
+
+- name: Install Filebeat 
+  import_role:
+    name: filebeat
+  vars:
+    FILEBEAT_CONFIG: filebeat.yml

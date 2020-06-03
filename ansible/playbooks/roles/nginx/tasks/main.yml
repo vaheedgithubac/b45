@@ -1,0 +1,52 @@
+
+- name: Wait For 
+  import_tasks: wait_for.yml 
+  when: MONGODB_NAME != "localhost"
+
+- name: CLone the repo 
+  import_role:
+    name: app-clone
+  vars:
+    ACTION: clone 
+
+- name: Install Nginx 
+  package:
+    name: nginx
+    state: present  
+
+- name: Delete files of default htdocs
+  file:
+    path: "/usr/share/nginx/html"
+    state: absent 
+
+- name: Copy htdocs
+  copy: 
+    src: /tmp/robo-shop/web/static/
+    dest: /usr/share/nginx/html
+    remote_src: yes 
+
+- name: Copy nginx Config 
+  template:
+    src: nginx.conf 
+    dest: /etc/nginx/nginx.conf 
+  notify: Restart Nginx 
+
+- name: Copy Application Config - localhost
+  template:
+    src: localhost.conf 
+    dest: /etc/nginx/conf.d/localhost.conf 
+  notify: Restart Nginx 
+  when: NGINX_CONF == "localhost"
+
+- name: Copy Application Config - Distributed
+  template:
+    src: robo-shop.conf 
+    dest: /etc/nginx/conf.d/robo-shop.conf 
+  notify: Restart Nginx 
+  when: NGINX_CONF != "localhost"
+
+- name: Start nginx 
+  service:
+    name: nginx 
+    state: started 
+    enabled: yes

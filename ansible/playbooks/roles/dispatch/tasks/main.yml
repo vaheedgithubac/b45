@@ -1,0 +1,87 @@
+- name: Import Go Install Role 
+  import_role: 
+    name: go 
+
+- name: CLone the repo 
+  import_role:
+    name: app-clone
+  vars:
+    ACTION: clone 
+
+- name: Install Go dep command 
+  shell: export GOBIN=/opt/go/bin ; curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+- name: Link dep to /bin 
+  file:
+    src: /opt/go/bin/dep 
+    dest: /bin/dep
+    state: link
+
+- name: Check Dispatch App 
+  stat:
+    path: "{{APP_DIR}}/gorcv"
+  register: out 
+
+- name: Create a directory for Dispatch App 
+  file:
+    path: /go/src/github.com/instana/dispatch
+    state: directory 
+  when: out.stat.exists == "false" or not out.stat.exists
+
+- name: Copy Dispatch Src to Dispatch Directory 
+  copy:
+    src: /tmp/robo-shop/dispatch/src/main.go
+    dest: /go/src/github.com/instana/dispatch
+    remote_src: yes 
+  when: out.stat.exists == "false" or not out.stat.exists
+
+- name: Compile Dispatch App
+  shell: export GOPATH=/go && dep init && dep ensure && go build -o bin/gorcv
+  args:
+    chdir: /go/src/github.com/instana/dispatch
+  when: out.stat.exists == "false" or not out.stat.exists
+
+- name: Create Dispatch Directory 
+  file:
+    path: "{{APP_DIR}}"
+    state: directory 
+  #when: out.stat.exists == "false"
+
+- name: COpy Dispatch Binary 
+  copy:
+    src: /go/src/github.com/instana/dispatch/bin/gorcv 
+    dest: "{{APP_DIR}}"
+    remote_src: yes 
+    mode: 0755
+  #when: out.stat.exists == "false"
+
+- name: Copy SystemD Service file 
+  copy:
+    src: "/tmp/robo-shop/{{APP_NAME}}/systemd.service"
+    dest: "/etc/systemd/system/{{APP_NAME}}.service"
+    remote_src: yes 
+   
+
+- name: Configure Systemd Service for {{APP_NAME}} Application 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "ROOT-DIR"
+    replace: "{{APP_ROOT_DIR}}"
+
+- name: SystemD Dameon-Reload 
+  systemd:
+    daemon_reload: yes 
+
+- name: Start Dispatch Service 
+  service:
+    name: dispatch 
+    state: started 
+    enabled: yes 
+
+
+
+- name: Install Filebeat 
+  import_role:
+    name: filebeat
+  vars:
+    FILEBEAT_CONFIG: filebeat.yml

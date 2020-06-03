@@ -1,0 +1,13 @@
+[Unit]
+Description=Python Payment Service
+
+[Service]
+User=robo-shop
+ExecStart=ROOT-DIR/dispatch/gorcv
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/robo-shop/dispatch.log
+StandardError=append:/var/log/robo-shop/dispatch.log
+SyslogIdentifier=dispatch
+[Install]
+WantedBy=multi-user.target

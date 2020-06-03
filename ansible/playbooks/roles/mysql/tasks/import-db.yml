@@ -1,0 +1,20 @@
+- name: CLone the repo 
+  import_role:
+    name: app-clone
+  vars:
+    ACTION: clone 
+
+- name: Unzip the dump file 
+  shell: gunzip /tmp/robo-shop/mysql/scripts/10-shipping.sql.gz 
+  ignore_errors: yes
+
+- name: Import Schema
+  mysql_db:
+    state: import
+    name: all
+    login_user: root
+    login_password: password
+    target: "{{item}}"
+  loop:
+    -  /tmp/robo-shop/mysql/scripts/10-shipping.sql
+    -  /tmp/robo-shop/mysql/scripts/20-ratings.sql

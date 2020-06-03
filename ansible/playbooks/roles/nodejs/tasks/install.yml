@@ -1,0 +1,26 @@
+- name: Get the Downloadable URL of NodeJS.
+  shell: curl -s https://nodejs.org/en/download/ | xargs -n1 | grep linux-x64.tar | sed -e 's|=| |g' -e 's|>| |g'| xargs -n1 | grep ^http
+  register: out 
+
+- name: Create NodeJS directory 
+  file:
+    path: /opt/node 
+    state: directory 
+
+- name: Download NodeJS 
+  unarchive:
+    src: "{{out.stdout}}"
+    dest: /opt/node
+    remote_src: yes
+    extra_opts:
+      - --strip=1
+
+- name: Make NodeJS links 
+  file:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    state: link
+  loop:
+    - {"src": "/opt/node/bin/node", "dest": "/bin/node"}
+    - {"src": "/opt/node/bin/npx", "dest": "/bin/npx"}
+    - {"src": "/opt/node/bin/npm", "dest": "/bin/npm"}

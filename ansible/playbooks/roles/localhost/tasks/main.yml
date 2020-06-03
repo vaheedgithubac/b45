@@ -1,0 +1,46 @@
+#- name: Import MongoDB 
+#  import_role:
+#    name: mongodb 
+#  
+#- name: Import RabbitMQ 
+#  import_role:
+#    name: rabbitmq 
+#    
+#- name: Import Redis 
+#  import_role:
+#    name: redis 
+#
+#- name: Import MySQL  
+#  import_role:
+#    name: mysql
+#
+- name: Import Cart 
+  import_role:
+    name: cart 
+#
+#- name: Import catalogue 
+#  import_role:
+#    name: catalogue 
+#
+#- name: Import Shipping 
+#  import_role:
+#    name: shipping 
+#
+#- name: Import Payment 
+#  import_role:
+#    name: payment 
+#
+#- name: Import User 
+#  import_role:
+#    name: user 
+#
+#- name: Import Ratings 
+#  import_role:
+#    name: ratings 
+#
+#- name: Import Nginx 
+#  import_role:
+#    name: nginx 
+#  vars:
+#    NGINX_CONF: localhost
+

@@ -1,0 +1,7 @@
+- name: demo from sample role 
+  debug:
+    msg: demo from sample role 
+  
+- name: Print item 
+  debug: 
+    msg: item = {{item}}

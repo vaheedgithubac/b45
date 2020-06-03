@@ -1,0 +1,28 @@
+- name: Copy Mongo Repo 
+  copy: 
+    src: mongo.repo 
+    dest: /etc/yum.repos.d/mongo.repo 
+
+- name: Install MongoDB 
+  package:
+    name: mongodb-org
+    state: present 
+
+- name: Replace Listen IP for MongoDB   
+  replace:
+    path: /etc/mongod.conf
+    regexp: '127\.0\.0\.1'
+    replace: '0.0.0.0' 
+
+- name: Start MongoDB 
+  service:
+    name: mongod 
+    state: restarted 
+    enabled: yes 
+
+
+- name: Load Schema 
+  include_tasks: schema.yml 
+  loop:
+    - catalogue
+    - users 

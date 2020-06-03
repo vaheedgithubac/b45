@@ -1,0 +1,8 @@
+- name: Playbook to create a vault file 
+  hosts: all 
+  tasks: 
+    - name: Create Vault Password file 
+      lineinfile:
+        path: /tmp/.vault 
+        line: "{{ANSIBLE_VAULT_PASSWORD}}"
+        create: yes

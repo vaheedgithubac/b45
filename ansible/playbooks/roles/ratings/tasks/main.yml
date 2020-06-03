@@ -1,0 +1,65 @@
+- name: CLone the repo 
+  import_role:
+    name: app-clone
+  vars:
+    ACTION: clone 
+
+- name: Install Packages 
+  package:
+    name: "{{item}}" 
+    state: present 
+  loop:
+    - httpd 
+    - yum-utils
+    - http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+- name: Install PHP 7 
+  yum:
+    name: "{{item}}"
+    enablerepo: remi-php73
+    state: present 
+  loop:
+    - php
+    - php-opcache
+    - php73-php-pdo
+    - composer
+
+- name: Change Default Port 
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf 
+    regexp: '^Listen'
+    line: Listen 8000
+
+- name: Copy Rating Config 
+  copy:
+    src: /tmp/robo-shop/ratings/status.conf 
+    dest: /etc/httpd/conf.d/status.conf 
+    remote_src: yes 
+
+- name: Clean old htdocs
+  file:
+    path: /var/www/html 
+    state: absent 
+
+- name: Copy Htdocs 
+  copy:
+    src: /tmp/robo-shop/ratings/html/
+    dest: /var/www/html
+    remote_src: yes
+
+- name: Install Php Components 
+  composer:
+    command: install
+    working_dir: /var/www/html 
+
+- name: Start Httpd
+  service:
+    name: httpd
+    state: restarted 
+    enabled: yes 
+  
+- name: Install Filebeat 
+  import_role:
+    name: filebeat
+  vars:
+    FILEBEAT_CONFIG: ratings.yml

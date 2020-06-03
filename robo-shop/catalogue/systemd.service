@@ -1,0 +1,14 @@
+[Unit]
+Description=Node.js Catalogue Service
+
+[Service]
+Environment="MONGO_URL=mongodb://MONGOHOST:27017/catalogue"
+User=robo-shop
+ExecStart=/bin/node ROOT-DIR/catalogue/server.js
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/robo-shop/catalogue.log
+StandardError=append:/var/log/robo-shop/catalogue.log
+SyslogIdentifier=catalogue
+[Install]
+WantedBy=multi-user.target

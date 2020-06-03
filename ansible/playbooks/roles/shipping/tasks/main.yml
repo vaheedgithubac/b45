@@ -1,0 +1,72 @@
+- name: Install Java 
+  import_role:
+    name: java 
+
+- name: CLone the repo 
+  import_role:
+    name: app-clone
+  vars:
+    ACTION: clone 
+
+- name: Create Application User 
+  user:
+    name: "{{APP_USER}}" 
+
+- name: Set permissions 
+  file:
+    path: /home/{{APP_USER}}
+    owner: "{{APP_USER}}"
+    group: "{{APP_USER}}"
+    recurse: yes
+
+- name: Create Application Directory 
+  file:
+    path: "{{APP_DIR}}"
+    state: directory 
+  become_user: "{{APP_USER}}"
+
+- name: Download Application Jar file 
+  get_url:
+    url: "{{APP_URL}}"
+    dest: "{{APP_DIR}}/shipping.jar"
+  become_user: "{{APP_USER}}"
+
+- name: Copy SystemD Service file 
+  copy:
+    src: "/tmp/robo-shop/{{APP_NAME}}/systemd.service"
+    dest: "/etc/systemd/system/{{APP_NAME}}.service"
+    remote_src: yes 
+
+- name: Configure Systemd Service for {{APP_NAME}} Application 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "ROOT-DIR"
+    replace: "{{APP_ROOT_DIR}}"
+
+- name: Update Cart Endpoint 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "CARTENDPOINT"
+    replace: "{{CART_HOST}}"
+
+- name: Update DB Endpoint 
+  replace: 
+    path: "/etc/systemd/system/{{APP_NAME}}.service"
+    regexp: "MYSQLHOST"
+    replace: "{{MYSQL_HOST}}"
+
+- name: SystemD Dameon-Reload 
+  systemd:
+    daemon_reload: yes
+
+- name: Start Shipping Service 
+  service:
+    name: shipping 
+    state: restarted 
+    enabled: yes 
+
+- name: Install Filebeat 
+  import_role:
+    name: filebeat
+  vars:
+    FILEBEAT_CONFIG: filebeat.yml

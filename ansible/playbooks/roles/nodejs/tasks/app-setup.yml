@@ -1,0 +1,36 @@
+- name: Create Application User 
+  user:
+    name: "{{APP_USER}}"
+
+- name: Copy Application 
+  copy:
+    src: /tmp/robo-shop/{{APP_NAME}}
+    dest: "{{APP_ROOT_DIR}}"
+    remote_src: yes
+
+- name: Install NodeJS deps 
+  shell: npm install 
+  args:
+    chdir: "{{APP_DIR}}"
+
+- name: Configure Systemd Service for {{APP_NAME}} Application 
+  replace: 
+    path: "{{APP_DIR}}/systemd.service"
+    regexp: "ROOT-DIR"
+    replace: "{{APP_ROOT_DIR}}"
+
+- name: Copy SystemD Service file 
+  copy:
+    src: "{{APP_DIR}}/systemd.service"
+    dest: "/etc/systemd/system/{{APP_NAME}}.service"
+    remote_src: yes 
+
+- name: SystemD Dameon-Reload 
+  systemd:
+    daemon_reload: yes
+
+- name: Start service 
+  systemd:
+    name: "{{APP_NAME}}"
+    state: started 
+    enabled: yes 

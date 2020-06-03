@@ -1,0 +1,9 @@
+- name: Hello from role 
+  debug: 
+    msg: Hello from role 
+
+- name: Import demo tasks
+  include_tasks: demo.yml
+  loop:
+    - d1 
+    - d2 

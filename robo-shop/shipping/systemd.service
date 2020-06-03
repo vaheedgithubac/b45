@@ -1,0 +1,15 @@
+[Unit]
+Description=Java Shipping Service
+
+[Service]
+User=robo-shop
+Environment="CART_ENDPOINT=CARTENDPOINT:8100"
+Environment="DB_HOST=MYSQLHOST"
+ExecStart=/usr/bin/nohup java -jar ROOT-DIR/shipping/shipping.jar  
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/robo-shop/shipping.log
+StandardError=append:/var/log/robo-shop/shipping.log
+SyslogIdentifier=shipping
+[Install]
+WantedBy=multi-user.target

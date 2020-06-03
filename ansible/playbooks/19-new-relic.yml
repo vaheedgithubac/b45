@@ -1,0 +1,7 @@
+- name: Run New relic 
+  hosts: all 
+  become: yes 
+  tasks:
+    - name: Import new relic 
+      import_role:
+        name:  newrelic

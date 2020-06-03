@@ -1,0 +1,29 @@
+- name: Remove MariaDB Libs
+  package:
+    name: mariadb-libs
+    state: absent 
+
+- name: Check MySQL Installed 
+  package:
+    name: mysql-community-server
+    state: latest
+  ignore_errors: true 
+  register: out 
+
+- name: Install MySQL 
+  include_tasks: install.yml 
+  when: out is failed 
+
+- name: Check root password is setup or not 
+  file:
+    path: /etc/my.cnf.d/password-reset
+  ignore_errors: yes 
+  register: out 
+
+- name: Setup Default Root Password 
+  include_tasks: setup-root-pass.yml
+  when: out is failed
+
+- name: Load Schema 
+  include_tasks: import-db.yml
+

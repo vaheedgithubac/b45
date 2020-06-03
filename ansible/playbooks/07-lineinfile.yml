@@ -1,0 +1,9 @@
+- name: Demo on lineinfile 
+  hosts: all
+  become: yes
+  tasks:
+    - name: Change a line 
+      lineinfile:
+        path: /tmp/mongod.conf
+        regex: "27017"
+        line: "27018"

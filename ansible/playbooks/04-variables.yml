@@ -1,0 +1,79 @@
+- name: Variables Demo 
+  hosts: all
+  ## Declare variables on Play Level 
+  vars: 
+    URL: play.google.com 
+
+  tasks:
+    - name: Print URL 
+      debug:
+        msg: "URL = {{URL}}"
+
+    - name: Print URL one more time 
+      debug:
+        msg: "URL = {{URL}}"
+
+## Observation: We can declare a variable in play and that variable can be available to all the tasks in the play.
+
+- name: Variable demo from tasks 
+  hosts: all 
+  vars:
+    URL: play.google.com 
+  tasks:
+    - name: Print URL 
+      debug:
+        msg: "URL = {{URL}}"
+      vars:
+        URL: task.google.com
+      ## We can declare variables from task level as well.
+  
+## Observation: We can have a variables declared in task level. But the local variable of task is going to have higher precedence.
+
+- name: Variable from a file demo 
+  hosts: all
+  vars:
+    URL: play.google.com
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Print URL 
+      debug:
+        msg: "URL = {{URL}}"
+
+## Observation: Vars_files is having higher precedence than vars.
+
+- name: Variable from User Input 
+  hosts: all
+  vars:
+    URL: play.google.com
+  #vars_files:
+  #  - vars.yml
+  #vars_prompt:
+  #  - name: URL 
+  #    prompt: Enter URL 
+  #    private: no
+  tasks:
+    - name: Print URL 
+      debug:
+        msg: "URL = {{URL}}" 
+      #vars:
+      #  URL: tasks.google.com
+
+## Observation: vars_files is having higher precedence than other variables which are vars & vars_prompt 
+
+- name: Variable from CLI 
+  hosts: all 
+  tasks:
+    - name: Print URL 
+      debug:
+        msg: "URL = {{URL}}" 
+
+## Observation: Highest precedence goes to CLI (-e var=data) variables.
+
+## 1. CLI 
+## 2. tasks
+## 3. vars_files 
+## 4. vars_prompt 
+## 5. vars 
+## 6. variables from inventory , hosts 
+## 7. variables from inventory , group 

@@ -1,0 +1,31 @@
+- name: Clean old clone 
+  file: 
+    path: /tmp/robo-shop
+    state: absent 
+ 
+- name: CLone the repo 
+  import_role:
+    name: app-clone
+  vars:
+    ACTION: clone 
+
+- name: Create Logs Directory 
+  file:
+    path: /var/log/robo-shop
+    state: directory 
+
+- name: Remove autoshutdown script 
+  file:
+    path: /var/spool/cron/root
+    state: absent
+
+- name: Copy rsyslog conf 
+  copy:
+    src: /tmp/robo-shop/rsyslog.conf
+    dest: /etc/rsyslog.d/01-robo-shop.conf
+    remote_src: yes
+
+- name: Restart Rsyslog 
+  service:
+    name: rsyslog 
+    state: restarted 

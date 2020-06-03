@@ -1,0 +1,26 @@
+- name: Install Pip
+  package:
+    name: python2-pip
+    state: present 
+
+- name: Install MySQL PIP Module 
+  pip:
+    name: PyMySQL
+
+- name: Grab existing root password 
+  shell: cat /var/log/mysqld.log | grep password | tail -1 | awk '{print $NF}'
+  register: out 
+
+- name: Copy Schema file of Password Reset 
+  copy:
+    src: pass-reset-schema.sql 
+    dest: /tmp/pass-reset-schema.sql 
+
+- name: Import Schema File for Password Reset 
+  shell: mysql --connect-expired-password -uroot -p"{{out.stdout}}" </tmp/pass-reset-schema.sql 
+
+- name: Create a lock file 
+  file:
+    path: /etc/my.cnf.d/password-reset
+    state: touch 
+

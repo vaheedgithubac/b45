@@ -1,0 +1,4 @@
+- name: Clean Clone repo 
+  file:
+    path: /tmp/robo-shop
+    state: absent 

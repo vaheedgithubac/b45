@@ -1,0 +1,14 @@
+- name: Demo on tags 
+  hosts: all
+  tasks:
+    - name: This for Project1 
+      debug:
+        msg: "This for Project 1"
+      tags:
+        - project1
+
+    - name: This for Project2
+      debug:
+        msg: "This for Project 2"
+      tags:
+        - project2

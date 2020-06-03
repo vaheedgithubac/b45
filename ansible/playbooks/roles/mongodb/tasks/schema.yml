@@ -1,0 +1,10 @@
+- name: Check schema exists 
+  shell: echo show dbs | mongo |grep {{item}}
+  register: out 
+  ignore_errors: true 
+
+- name: Load Schema
+  shell: mongo localhost {{item}}.js
+  args:
+    chdir: /tmp/robo-shop/mongo
+  when: out is failed

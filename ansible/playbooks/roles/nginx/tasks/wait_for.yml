@@ -1,0 +1,36 @@
+- name: Wait for  
+  wait_for:
+    port: 22
+    host: "catalogue-robo-shop-{{ENV}}.devopsb45.internal"
+  connection: local 
+
+- name: Wait for  
+  wait_for:
+    port: 22
+    host: "cart-robo-shop-{{ENV}}.devopsb45.internal"
+  connection: local 
+
+- name: Wait for  
+  wait_for:
+    port: 22
+    host: "payment-robo-shop-{{ENV}}.devopsb45.internal"
+  connection: local 
+
+- name: Wait for  
+  wait_for:
+    port: 22
+    host: "shipping-robo-shop-{{ENV}}.devopsb45.internal"
+  connection: local 
+
+- name: Wait for  
+  wait_for:
+    port: 22
+    host: "user-robo-shop-{{ENV}}.devopsb45.internal"
+  connection: local 
+
+- name: Wait for  
+  wait_for:
+    port: 22
+    host: "ratings-robo-shop-{{ENV}}.devopsb45.internal"
+  connection: local 
+

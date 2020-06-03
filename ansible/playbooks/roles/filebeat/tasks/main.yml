@@ -1,0 +1,14 @@
+- name: Install Filebeat 
+  package:
+    name: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.6.2-x86_64.rpm
+    state: installed 
+
+- name: Copy filebeat configuration 
+  template:
+    src: "{{FILEBEAT_CONFIG}}"
+    dest: /etc/filebeat/filebeat.yml 
+
+- name: Start filebeat 
+  service:
+    name: filebeat 
+    state: restarted

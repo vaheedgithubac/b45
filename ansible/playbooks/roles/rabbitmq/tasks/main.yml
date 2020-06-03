@@ -1,0 +1,19 @@
+- name: Install ESL-ERLANG 
+  package:
+    name: https://packages.erlang-solutions.com/erlang/rpm/centos/7/x86_64/esl-erlang_22.2.1-1~centos~7_amd64.rpm
+    state: present 
+
+- name: Setup repos 
+  shell: curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
+
+- name: Install RabbitMQ 
+  package:
+    name: rabbitmq-server 
+    state: present
+  
+- name: Start RabbitMQ 
+  service:
+    name: rabbitmq-server 
+    state: started 
+    enabled: yes 
+ 

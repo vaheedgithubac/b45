@@ -1,0 +1,7 @@
+- name: Clone the repo 
+  import_tasks: clone.yml
+  when: ACTION == "clone"
+
+- name: Clean the repo 
+  import_tasks: cleanup.yml
+  when: ACTION == "clean"

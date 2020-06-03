@@ -1,0 +1,6 @@
+- name: Demo in Print Message
+  hosts: all
+  tasks:
+    - name: Debug Module to Print Message
+      debug: 
+        msg: "Hello from Task"

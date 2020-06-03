@@ -1,0 +1,14 @@
+#KEY:VALUE
+COURSE_NAME: DevOps
+COURSE_TRAINER: Raghu K 
+COURSE_TIMING: 6AM IST
+#LIST , KEY having multiple values is called as a List 
+CONTACT_NUMBER: 
+   - 9999999999
+  - 8888888888
+STUDENT_LIST:
+  - name: Raju 
+    email: raju@gmail.com 
+  - name: Rahul
+    email: rahul@gmail.com
+

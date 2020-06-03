@@ -1,0 +1,9 @@
+- name: Demo on privilege escalation 
+  hosts: all 
+  become: yes ## Enabling sudo 
+  tasks:
+    - name: Copy mongo.repo 
+      copy:
+        src: mongo.repo
+        dest: /tmp 
+      become: yes

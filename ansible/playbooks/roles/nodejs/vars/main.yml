@@ -1,0 +1,3 @@
+APP_USER: robo-shop
+APP_ROOT_DIR: /home/{{APP_USER}}/ROBO-SHOP
+APP_DIR: "{{APP_ROOT_DIR}}/{{APP_NAME}}"

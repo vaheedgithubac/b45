@@ -1,0 +1,40 @@
+- name: Install Java 
+  package:
+    name: java 
+    state: present 
+
+- name: Install Logstash 
+  package: 
+    name: https://artifacts.elastic.co/downloads/logstash/logstash-7.6.2.rpm
+    state: present 
+
+- name: Install Logstash Plugin 
+  shell: /usr/share/logstash/bin/logstash-plugin install logstash-output-amazon_es 
+
+- name: Copy Logstash Config 
+  template:
+    src: logstash.conf 
+    dest: /etc/logstash/conf.d/logstash.conf
+
+- name: Start LogStash 
+  service:
+    name: logstash 
+    state: restarted 
+    enabled: yes 
+  
+- name: Install nginx 
+  package:
+    name: nginx 
+    state: installed 
+
+- name: Copy nginx config 
+  template:
+    src: nginx.conf 
+    dest: /etc/nginx/nginx.conf 
+
+- name: Start nginx service 
+  service:
+    name: nginx 
+    state: started 
+    enabled: yes 
+

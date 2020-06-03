@@ -1,0 +1,11 @@
+- name: Play1
+  hosts: all 
+  tasks:
+    - name: Task1 in Play1 
+      debug: 
+
+- name: Play2 
+  hosts: all 
+  tasks:
+    - name: Task1 in Play2 
+      debug:

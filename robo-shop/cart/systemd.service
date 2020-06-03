@@ -1,0 +1,15 @@
+[Unit]
+Description=Node.js Cart Service
+
+[Service]
+Environment="REDIS_HOST=REDISHOST"
+Environment="CATALOGUE_HOST=CATALOGUEHOST"
+User=robo-shop
+ExecStart=/bin/node ROOT-DIR/cart/server.js
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/robo-shop/cart.log
+StandardError=append:/var/log/robo-shop/cart.log
+SyslogIdentifier=cart
+[Install]
+WantedBy=multi-user.target

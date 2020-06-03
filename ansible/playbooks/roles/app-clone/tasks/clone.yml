@@ -1,0 +1,12 @@
+   
+- name: Clone the repository 
+  git:
+    repo: https://{{GIT_USER}}:{{GIT_PASS}}@gitlab.com/d45/robo-shop.git
+    dest: /tmp/robo-shop
+    force: yes
+
+
+- name: Setup Application Directory 
+  file:
+    path: /root/ROBO-SHOP
+    state: directory 

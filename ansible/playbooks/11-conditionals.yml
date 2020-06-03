@@ -1,0 +1,16 @@
+- name: Demo on conditionals 
+  hosts: all 
+  tasks:
+    - shell: /bin/false
+      register: result
+      ignore_errors: True
+
+    - name: Print OK
+      debug:
+        msg: Nice , good job 
+      when: result is succeeded
+
+    - name: Print Notok
+      debug:
+        msg: Bad, Try again 
+      when: result is failed 

@@ -1,0 +1,11 @@
+- name: Check Status of a fle 
+  hosts: all 
+  tasks:
+    - name: Check file stat
+      stat: 
+        path: /opt/go/bin/go 
+      register: out 
+
+    - name: Print 
+      debug:
+        msg: "{{out}}"

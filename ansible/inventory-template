@@ -1,0 +1,43 @@
+## Nomenclature of a node.
+# project-datacenter-env-appl-node_number.domain
+
+# Project: RS (Robo-Shop)
+# Env : DEV, STG, PRD
+# APPL: mysql, mongo, rabbitmq, redis, Cart, Catalogue, Shipping, Payment
+
+## DC 1 
+# nyk
+
+[RS_NYK_DEV_MONGO]
+rs-nyk-dev-mongo-01.devopsb45.internal
+
+[RS_NYK_DEV_MYSQL]
+rs-nyk-dev-mysql-01.devopsb45.internal
+
+[RS_NYK_PRD_CART]
+rs-nyk-prd-cart-01.devopsb45.internal
+
+[RS_NYK_PRD_CATALOGUE]
+rs-nyk-prd-catalogue-01.devopsb45.internal
+rs-nyk-prd-catalogue-02.devopsb45.internal
+rs-nyk-prd-catalogue-03.devopsb45.internal
+
+## DC 2 
+# lav
+
+[RS_LAV_DEV_MONGO]
+rs-lav-dev-mongo-01.devopsb45.internal
+
+[RS_LAV_PRD_CART]
+rs-lav-prd-cart-01.devopsb45.internal
+
+[RS_LAV_PRD_CATALOGUE]
+rs-lav-prd-catalogue-01.devopsb45.internal
+rs-lav-prd-catalogue-02.devopsb45.internal
+rs-lav-prd-catalogue-03.devopsb45.internal
+
+## Group of Groups.
+
+[RS_PRD_CATALOGUE:children]
+RS_LAV_PRD_CATALOGUE
+RS_NYK_PRD_CATALOGUE

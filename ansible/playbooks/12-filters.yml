@@ -1,0 +1,12 @@
+- name: Demo on filters 
+  hosts: all 
+  vars:
+    URL: http://google.com
+  tasks:
+    - name: Filter domain 
+      debug:
+        msg: "{{URL | urlsplit('netloc') }}"
+
+    - name: Print with . delimiter 
+      debug:
+        msg: "{{URL.split('.')[1]}}"

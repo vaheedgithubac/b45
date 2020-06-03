@@ -1,0 +1,99 @@
+- name: Robo Shop Application Setup 
+  hosts: all 
+  become: yes
+  tasks:
+    - name: Setup all in one server 
+      import_role:
+        name: localhost 
+      tags:
+        - localhost
+
+
+    - name: Setup Logstash 
+      import_role:
+        name: logstash 
+      tags: 
+        - logstash 
+        
+    - name: Import os-configs role 
+      import_role:
+        name: os-configs
+      tags:
+        - cart 
+        - catalogue 
+        - shipping 
+        - payment
+        - dispatch 
+        - user 
+        - ratings 
+        - mongodb
+        - nginx 
+        - redis
+        - rabbitmq
+
+    - name: Import nginx service role 
+      import_role:
+        name: nginx 
+      tags:
+        - nginx
+
+    - name: Import ratings service role 
+      import_role:
+        name: ratings 
+      tags:
+        - ratings
+
+    - name: Import user service role 
+      import_role:
+        name: user 
+      tags:
+        - user
+        
+    - name: Import dispatch service role 
+      import_role:
+        name: dispatch 
+      tags:
+        - dispatch
+
+    - name: Import payment service role 
+      import_role:
+        name: payment 
+      tags:
+        - payment
+        
+    - name: Import shipping service role 
+      import_role:
+        name: shipping 
+      tags:
+        - shipping
+        
+    - name: Import cart service role 
+      import_role:
+        name: cart 
+      tags:
+        - cart 
+
+    - name: Import Catalogue service role 
+      import_role:
+        name: catalogue 
+      tags:
+        - catalogue 
+
+    - name: Import MongoDB role 
+      import_role:
+        name: mongodb 
+      tags:
+        - mongodb
+
+    - name: Import Redis role 
+      import_role: 
+        name: redis 
+      tags:
+        - redis
+
+    - name: Import RabbitMQ role 
+      import_role: 
+        name: rabbitmq 
+      tags:
+        - rabbitmq
+

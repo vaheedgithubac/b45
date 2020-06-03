@@ -1,0 +1,9 @@
+MONGODB_NAME: localhost 
+REDIS_NAME: localhost
+ENV: dev
+CATALOGUE_NAME: localhost
+CART_HOST: localhost
+MYSQL_HOST: localhost
+RABBITMQ_HOST: localhost
+USER_HOST: localhost
+LOGSTASH_ENDPOINT: localhost

@@ -1,0 +1,8 @@
+- name: Check nodejs installed or not 
+  shell: node --version 
+  ignore_errors: yes 
+  register: out 
+
+- name: Install NodeJS 
+  include_tasks: install.yml
+  when: INSTALL is defined and out.rc != 0

@@ -1,0 +1,6 @@
+- name: A role from galaxy 
+  hosts: all 
+  become: yes
+  roles:
+    - bihealth.postgres_server
+    
